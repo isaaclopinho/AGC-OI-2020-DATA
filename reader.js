@@ -90,18 +90,20 @@ let total = 0;
   return [classe, cpf, nome, reais, usd, euros, libras, total];
 });
 
-let data = [["classe", "cpf", "nome", "reais", "usd", "euros", "libras", "total"]].concat(dataFiltered);
+// Adding header to dataFiltered
+let CSVData = [["classe", "cpf", "nome", "reais", "usd", "euros", "libras", "total"]].concat(dataFiltered);
 
-var logger2 = fs.createWriteStream('datas/relacao-credores-votantes.csv', {flags: 'w' });
+//Creating the csv file
+var file = fs.createWriteStream(config.filePath, {flags: 'w' });
 
-data.forEach(element => {
+CSVData.forEach(element => {
     let str = '';
     for(let i=0;i < element.length; i++){
       let el = element[i] === undefined ? '0' : element[i];
         str+= (el);
         str += (i==element.length-1? '\n' : '\t')
     }
-    logger2.write(str);
+    file.write(str);
 });
 
-logger2.end();
+file.end();
