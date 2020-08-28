@@ -1,0 +1,27 @@
+{
+  "name": "oi",
+  "version": "1.0.0",
+  "description": "analise de dados da AGC da oi",
+  "main": "server.js",
+  "dependencies": {
+    "fast-csv": "^4.3.1",
+    "express": "^4.17.1",
+    "node-xlsx": "^0.15.0",
+    "read-excel-file": "^4.0.7"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/isaaclopinho/AGC-OI-2020-DATA.git"
+  },
+  "author": "Isaac Lopes",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/isaaclopinho/AGC-OI-2020-DATA/issues"
+  },
+  "homepage": "https://github.com/isaaclopinho/AGC-OI-2020-DATA#readme"
+}

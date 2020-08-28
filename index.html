@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<!-- Color scale -->
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+
+<!-- Add 2 buttons -->
+<button onclick="update('Trabalhista')">Trabalhista</button>
+<button onclick="update('Garantia Real')">Garantia Real</button>
+<button onclick="update('Quirografário')">Quirografários</button>
+<button onclick="update('Microempresa')">Microempresa</button>
+
+<!-- Create a div where the graph will take place -->
+<div id="my_dataviz"></div>
+
+
+<script>
+
+
+
+
+
+
+
+    // A function that create / update the plot for a given variable:
+    function update(selectedVar) {
+        
+        document.getElementById("my_dataviz").innerHTML = '';
+        // Parse the Data
+        d3.json("results.json", data => {
+            let classe = "Microempresa";
+            let microempresa = data[selectedVar]["votingWeight"].map(x => ({ "name": x[0], "value": x[2] })).slice(0, 15);
+
+
+
+            // set the dimensions and margins of the graph
+            var margin = { top: 10, right: 0, bottom: 220, left: 150 },
+                width = 800 - margin.left - margin.right,
+                height = 640 - margin.top - margin.bottom;
+
+            // Initialize the X axis
+            var x = d3.scaleBand()
+                .domain(microempresa.map(d => d.name))
+                .range([0, width])
+                .padding(0.2);
+
+            // Initialize the Y axis
+            var y = d3.scaleLinear()
+                .domain([0, d3.max(microempresa, d => d.value )])
+                .range([height, 0]);
+
+            // append the svg object to the body of the page
+            var svg = d3.select("#my_dataviz")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform",
+                    "translate(" + margin.left + "," + margin.top + ")");
+
+            // update bars
+            var yAxis = svg.append("g")
+                .call(d3.axisLeft(y))
+                .attr("class", "myYaxis")
+            
+
+            var xAxis = svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x))
+                .selectAll("text")
+                .attr("transform", "translate(-10,0)rotate(-45)")
+                .style("text-anchor", "end")
+
+
+
+
+
+            var u = svg.selectAll("rect")
+                .data(microempresa)
+
+            u
+                .enter()
+                .append("rect")
+                .merge(u)
+                .transition()
+                .duration(1000)
+                .attr("x", function (d) { return x(d.name); })
+                .attr("y", function (d) { return y(d.value); })
+                .attr("width", x.bandwidth())
+                .attr("height", function (d) { return height - y(d.value) })
+                .attr("fill", "#69b3a2")
+
+            u.exit().remove();
+        })
+
+    }
+
+    // Initialize plot
+    update('Microempresa')
+
+
+
+
+</script>
