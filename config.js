@@ -3,7 +3,8 @@ module.exports.config = {
     "EURO" : 6.59,
     "POUND" : 7.36,
     "CURRENCY_DATE" : "27-08-2020",
-    filePath : 'datas/relacao-credores-votantes.csv'
+    filePath : 'datas/relacao-credores-votantes.csv',
+    fileResults : 'datas/results.json'
 }
 
 

@@ -1,4 +1,5 @@
 const { config, classes }= require("./config");
+const { analysis } = require('./DataAnalysis');
 
 var xlsx = require('node-xlsx').default;
 var fs = require('fs');
@@ -88,6 +89,8 @@ let dataFiltered = dataFromXLSX.map((x) => {
   return [classe, cpf, nome, BRL, USD, EUR, POUNDS, total];
 });
 
+
+
 // CSV Header
 let CSVHeader =  [["classe", "cpf", "nome", "reais", "usd", "euros", "libras", "total"]]
 // Adding header to dataFiltered
@@ -100,12 +103,12 @@ console.log("Creating CSV file: " + config.filePath);
 var file = fs.createWriteStream(config.filePath, {flags: 'w' });
 
 CSVData.forEach(element => {
-    let str = '';
-    for(let i=0;i < element.length; i++){
-        str += element[i] === undefined ? '0' : element[i];;
-        str += (i==element.length-1 ? '\n' : '\t')
-    }
-    file.write(str);
+  let str = '';
+  for(let i=0;i < element.length; i++){
+    str += element[i] === undefined ? '0' : element[i];;
+    str += (i==element.length-1 ? '\n' : '\t')
+  }
+  file.write(str);
 });
 
 file.end();
@@ -113,3 +116,12 @@ file.end();
 console.log("CSV file has been created");
 console.log("CSV separator = TAB")
 console.log("CSV header = " + CSVHeader)
+
+//Data Analysis
+let results = analysis(dataFiltered);
+
+
+//Creating the csv file
+file = fs.createWriteStream(config.fileResults, {flags: 'w' });
+file.write(JSON.stringify(results));
+file.end();
