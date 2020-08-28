@@ -8,32 +8,26 @@ console.log("USD " + config.USD);
 console.log("EUROS " + config.EURO);
 console.log("POUNDS " + config.POUND);
 
-let dataFiltered = [];
+let dataFromXLSX = [];
 
+// Reading the files credoresAptosVotacaoAGC/[0-2].xlsx removing the lines that contains unnecessary information
 for (let i = 0; i < 3; i++) {
-  let workSheetsFromBuffer = xlsx.parse(
-    fs.readFileSync(`${__dirname}/credoresAptosVotacaoAGC/`+ i +`.xlsx`)
-  );
-  dataFiltered = dataFiltered.concat(
-    workSheetsFromBuffer[0].data.filter((x) => {
-      // REMOVE A LINHA QUE SÓ TEM UM CAMPO
-      if (x.length <= 1) return false;
+  let workSheetsFromBuffer = xlsx.parse(fs.readFileSync(`${__dirname}/credoresAptosVotacaoAGC/`+ i +`.xlsx`));
 
-      //REMOVE OS CABEÇALHOS
-      if (typeof x[1] === "string") {
-        if (x[1].includes("Classe")) return false;
-      }
+  workSheetsFromBuffer = workSheetsFromBuffer[0].data.filter((x) => {
+    if (typeof x[1] === "string") {
+      if (x[1].includes("Classe"))
+        return false;
+    }
+    return true;
+  })
 
-      return true;
-    })
-  );
+  dataFromXLSX = dataFromXLSX.concat(workSheetsFromBuffer);
 }
-console.log(dataFiltered.length);
 
-let d2 = dataFiltered.filter(x => (x.includes("R$") || x.includes("USD") || x.includes("€") || x.includes("£")));
+console.log("Number of lines: " + dataFromXLSX.length);
 
-
-let d2mapped = d2.map( x=> {
+let dataFiltered = dataFromXLSX.map( x=> {
   let nome, classe, reais, euros, libras, usd;
 
   classe = x[1];
@@ -96,11 +90,7 @@ let total = 0;
   return [classe, cpf, nome, reais, usd, euros, libras, total];
 });
 
-let data =  [["classe", "cpf", "nome", "reais", "usd", "euros", "libras", "total"]].concat(d2mapped);
-
-console.log(d2.length);
-console.log(data.length);
-
+let data = [["classe", "cpf", "nome", "reais", "usd", "euros", "libras", "total"]].concat(dataFiltered);
 
 var logger2 = fs.createWriteStream('datas/relacao-credores-votantes.csv', {flags: 'w' });
 
