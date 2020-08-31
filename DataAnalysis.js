@@ -17,14 +17,14 @@ module.exports.analysis = (data) => {
         result[classes[i]]["totalCreditos"] = totalCredits;
         
         let pesoVotacaoClasse = classArray.map (x => {
-            let nome = x[2];
-            let cpf = x[1];
-            let peso = (x[7]/totalCredits)*100;
+            // let nome = x[2];
+            // let cpf = x[1];
+            // let peso = (x[7]/totalCredits)*100;
 
-            return [nome, cpf, peso];
+            return x;
         });
 
-        result[classes[i]]["votingWeight"] = pesoVotacaoClasse.sort((a,b) => b[2] - a[2]);
+        result[classes[i]]["votingWeight"] = pesoVotacaoClasse.sort((a,b) => b[7] - a[7]);
         
     }
     

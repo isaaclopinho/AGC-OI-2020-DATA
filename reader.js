@@ -120,8 +120,26 @@ console.log("CSV header = " + CSVHeader)
 //Data Analysis
 let results = analysis(dataFiltered);
 
+  //Creating the csv file
+  
+  classes.forEach((k) => {
+    file = fs.createWriteStream("datas/"+k+".csv" , { flags: "w" });
 
-//Creating the csv file
+    CSVHeader.concat(results[k]["votingWeight"]).forEach((element) => {
+      let str = "";
+      for (let i = 0; i < element.length; i++) {
+        str += element[i] === undefined ? "0" : element[i];
+        str += i == element.length - 1 ? "\n" : "\t";
+      }
+      file.write(str);
+    });
+
+    file.end();
+  });
+
+
+
+// Creating the csv file
 file = fs.createWriteStream(config.fileResults, {flags: 'w' });
 file.write(JSON.stringify(results));
 file.end();
